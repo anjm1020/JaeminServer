@@ -1,100 +1,10 @@
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<title>Jaemin Server</title>
+	<link rel="stylesheet" href="/css/index.css"/>
+	<script src="/js/index.js"></script>
 </head>
 <style>
-	* {
-		margin: 0;
-		padding: 0;
-	}
-
-	body {
-		width: 100vw;
-		height: 100vh;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	li {
-		list-style: none;
-	}
-
-	.content-wrapper {
-		width: 40%;
-		height: 60%;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		border: 1px solid #707070;
-	}
-
-	#service-wrapper {
-		position: relative;
-		flex: 9;
-		height: 85%;
-		width: 100%;
-
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-
-		border-top: 1px solid #707070;
-	}
-
-	#system-message-wrapper {
-		flex: 1;
-		height: 10%;
-		width: 100%;
-		border-top: 1px solid #707070;
-
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	#file-service-wrapper {
-		flex: 1;
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-direction: column;
-		border-right: 1px solid #707070;
-	}
-
-	#client-list-wrapper {
-		flex: 1;
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-direction: column;
-	}
-
-	#file-form-wrapper {
-		background: #dddddd;
-		margin-bottom: 2rem;
-	}
-
-	li {
-		margin-top: 0.5rem;
-	}
-
-	textarea {
-		flex:1;
-		resize: none;
-		overflow-y: scroll;
-		border : none;
-	}
-
-	.title-head {
-		position: absolute;
-		top: 3%;
-	}
-
 </style>
 <body>
 <div class="content-wrapper">
@@ -136,6 +46,11 @@
 			<system> : client4 님이 퇴장하셨습니다.
 			<system> : client4 님이 퇴장하셨습니다.
 		</textarea>
+	</div>
+	<div id="connect_wrapper">
+		<label for="client_name">Client Name :</label>
+		<input id="client_name" type="text" name="client_name">
+		<input id="client_login_button" type="button" value="접속">
 	</div>
 </div>
 </body>
