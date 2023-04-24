@@ -36,5 +36,8 @@ public class SocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sockets.remove(session);
+        for (WebSocketSession webSocketSession : sockets.keySet()) {
+            System.out.println(sockets.get(webSocketSession));
+        }
     }
 }
