@@ -33,8 +33,11 @@ public class ServerController {
         return "index";
     }
 
-    @DeleteMapping("/file/{host}/{fileName}")
-    public String deleteFile(HttpServletRequest request,@PathVariable String host, @PathVariable String fileName) throws IOException {
+
+    @GetMapping("/deleteFile")
+    @ResponseBody
+    public String deleteFile(HttpServletRequest request,@RequestParam("host") String host, @RequestParam("filename") String fileName) throws IOException {
+        System.out.println("OK, host=" + host +",fn =" + fileName);
         if (fileService.deleteFile(request.getRemoteAddr(), host, fileName)) {
             return "index";
         }

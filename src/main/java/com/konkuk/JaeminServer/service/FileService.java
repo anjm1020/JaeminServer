@@ -22,6 +22,7 @@ public class FileService {
     private final SocketHandler socketHandler;
     private static Map<String, String> pathMap = new ConcurrentHashMap<>();
     private static Map<String, String> originalFilename = new ConcurrentHashMap<>();
+    private static Map<String, String> fileUUIDMap = new ConcurrentHashMap<>();
     private static final String FILE_DIR = "/Users/jaemin/file";
 
     public String uploadFile(String host, MultipartFile file, String remoteAddr) throws IOException {
@@ -31,6 +32,7 @@ public class FileService {
             String fileUUID = UUID.randomUUID().toString() + "_" + filename;
 
             originalFilename.put(fileUUID, filename);
+            fileUUIDMap.put(filename, fileUUID);
 
             String fullHost = remoteAddr + "_" + host;
             String dir = FILE_DIR + File.separator + fullHost;
@@ -61,17 +63,17 @@ public class FileService {
 
     public boolean deleteFile(String remoteAddr, String host, String fileName) throws IOException {
         String fullHost = remoteAddr + "_" + host;
-        String dir = pathMap.get(fullHost);
-        String path = dir + File.separator + originalFilename.get(fileName);
-
+        String dir = FILE_DIR + File.separator + fullHost;
+        String path = dir + File.separator + fileUUIDMap.get(fileName);
+        System.out.println(path);
         Path absPath = Paths.get(path).toAbsolutePath();
         File target = absPath.toFile();
-
+        System.out.println(absPath);
         if (target.exists()) {
             if (target.delete()) {
                 CompletableFuture.runAsync(() -> {
                     try {
-                        socketHandler.emitFileList(originalFilename, remoteAddr, host, fileName, true);
+                        socketHandler.emitFileList(originalFilename, remoteAddr, host, fileName, false);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

@@ -43,16 +43,16 @@ function onConnect(evt) {
             let list = msg.split("$");
             let ul = document.getElementById("file-list");
             ul.innerHTML = '';
-            for (let i = 1; i < list.length && list[i].length!=0; i++) {
+            for (let i = 1; i < list.length && list[i].length != 0; i++) {
                 ul.innerHTML = ul.innerHTML +
                     "<div id='file_item'>" +
                     "<li>" + list[i] +
                     "</li>" +
-                    "<button type='button' onclick='onDelete()' data-filename='" +
+                    "<button type='button' onclick='onDelete(event)' data-filename='" +
                     list[i] +
-                    "'" +
-                    "데이터 삭제"+
-                    "</button>"+
+                    "'>" +
+                    "데이터 삭제" +
+                    "</button>" +
                     "</div>";
             }
             return;
@@ -85,16 +85,17 @@ function onDelete(evt) {
     const name = document.getElementById("client_name").value;
     let filename = evt.target.dataset.filename;
     console.log(name + "," + filename);
-    fetch('/file', {
-        method: 'DELETE',
-    })
-        .then(response => {
-            // 서버 응답 처리
-            console.log('파일 업로드 성공');
-        })
-        .catch(error => {
-            console.error('파일 업로드 실패', error);
-        });
+
+    let url = '/deleteFile?host=' + name + '&filename=' + filename;
+    console.log(url);
+    fetch(url, {
+        method: 'GET',
+    }).then(response => {
+        // 서버 응답 처리
+        console.log('파일 업로드 성공');
+    }).catch(error => {
+        console.error('파일 업로드 실패', error);
+    });
 }
 
 function onDisconnect() {
