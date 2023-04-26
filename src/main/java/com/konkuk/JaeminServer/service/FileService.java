@@ -1,6 +1,7 @@
 package com.konkuk.JaeminServer.service;
 
 import com.konkuk.JaeminServer.handler.SocketHandler;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +24,7 @@ public class FileService {
     private static Map<String, String> originalFilename = new ConcurrentHashMap<>();
     private static final String FILE_DIR = "/Users/jaemin/file";
 
-    public String uploadFile(String host, MultipartFile file) throws IOException {
+    public String uploadFile(String host, MultipartFile file, String remoteAddr) throws IOException {
         if (!file.isEmpty()) {
 
             String filename = file.getOriginalFilename();
@@ -31,9 +32,10 @@ public class FileService {
 
             originalFilename.put(fileUUID, filename);
 
-            String dir = FILE_DIR + File.separator + host;
+            String fullHost = remoteAddr + "_" + host;
+            String dir = FILE_DIR + File.separator + fullHost;
             if (!pathMap.containsKey(dir)) {
-                pathMap.put(dir, host);
+                pathMap.put(dir, fullHost);
             }
 
             File folder = new File(dir);
@@ -47,7 +49,7 @@ public class FileService {
 
             CompletableFuture.runAsync(() -> {
                 try {
-                    socketHandler.emitFileList(originalFilename);
+                    socketHandler.emitFileList(originalFilename, remoteAddr, host, filename, true);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -57,7 +59,26 @@ public class FileService {
         } else return null;
     }
 
-    public String deleteFile(String host, MultipartFile file) {
-        return null;
+    public boolean deleteFile(String remoteAddr, String host, String fileName) throws IOException {
+        String fullHost = remoteAddr + "_" + host;
+        String dir = pathMap.get(fullHost);
+        String path = dir + File.separator + originalFilename.get(fileName);
+
+        Path absPath = Paths.get(path).toAbsolutePath();
+        File target = absPath.toFile();
+
+        if (target.exists()) {
+            if (target.delete()) {
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        socketHandler.emitFileList(originalFilename, remoteAddr, host, fileName, true);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -63,6 +63,10 @@ li {
     border-right: 1px solid #707070;
 }
 
+#file-list {
+    display: none;
+}
+
 #client-list-wrapper {
     flex: 1;
     height: 100%;
@@ -75,6 +79,7 @@ li {
 #file-form-wrapper {
     background: #dddddd;
     margin-bottom: 2rem;
+    display: none;
 }
 
 li {
