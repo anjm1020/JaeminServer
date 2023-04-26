@@ -17,15 +17,28 @@ function onConnect(evt) {
     websocket.onmessage = onMessage;
     websocket.onopen = onOpen;
 
+    document.getElementById("client_name_input").value = name;
+
     function onMessage(evt) {
 
 
         let msg = evt.data;
 
-        // check list
+        // check client list
         if (msg.indexOf("CLIENT_LIST") >= 0) {
             let list = msg.split("$");
             let ul = document.getElementById("client-list");
+            ul.innerHTML = '';
+            for (let i = 1; i < list.length; i++) {
+                ul.innerHTML = ul.innerHTML + "<li>" + list[i] + "</li>";
+            }
+            return;
+        }
+
+        // check file list
+        if (msg.indexOf("FILE_LIST") >= 0) {
+            let list = msg.split("$");
+            let ul = document.getElementById("file-list");
             ul.innerHTML = '';
             for (let i = 1; i < list.length; i++) {
                 ul.innerHTML = ul.innerHTML + "<li>" + list[i] + "</li>";
@@ -52,6 +65,12 @@ function onConnect(evt) {
     }
 
     return false;
+}
+
+function onSubmit(evt) {
+    evt.preventDefault();
+
+
 }
 
 function onDisconnect() {
